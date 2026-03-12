@@ -1,30 +1,24 @@
 const express = require("express");
 const path = require("path");
 const nodemailer = require("nodemailer");
-const fs = require("fs");
 
 // Load .env locally (Render ignores .env by default; you set vars in Render dashboard)
 require("dotenv").config();
 
 const app = express();
 const PORT = process.env.PORT || 3000;
+const siteRoot = __dirname;
 
 app.get("/", (req, res) => {
-  res.sendFile(path.join(__dirname,"index.html"));
+  res.sendFile(path.join(siteRoot, "index.html"));
 });
-// Determine public folder path (works on local and Render)
-const publicPath = (() => {
-  const localPath = path.join(__dirname, "public");
-  const parentPath = path.join(__dirname, "..", "public");
-  return fs.existsSync(localPath) ? localPath : parentPath;
-})();
 
 // Body parsers
 app.use(express.json({ limit: "200kb" }));
 app.use(express.urlencoded({ extended: true }));
 
-// Static files from /public
-app.use(express.static(publicPath, { extensions: ["html"] }));
+// Static files from the current project root
+app.use(express.static(siteRoot, { extensions: ["html"] }));
 
 // Health check
 app.get("/api/health", (_req, res) => res.json({ ok: true }));
@@ -89,7 +83,7 @@ ${safe(message)}
 
 // SPA fallback (must be AFTER express.static)
 app.get("*", (_req, res) => {
-  res.sendFile(path.join(publicPath, "index.html"));
+  res.sendFile(path.join(siteRoot, "index.html"));
 });
 
 app.listen(PORT, () => {
