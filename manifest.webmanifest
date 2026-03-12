@@ -1,0 +1,22 @@
+{
+  "name": "ChooseYourGameMode – Kiss Condoms",
+  "short_name": "Kiss PWA",
+  "description": "A youth-focused sexual health awareness website with game modes, education, support, and installable PWA features.",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#081120",
+  "theme_color": "#E8001D",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "images/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "images/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
