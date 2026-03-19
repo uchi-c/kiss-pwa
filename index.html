@@ -469,18 +469,53 @@
     }
  
     .community-video,
-    .community-photo {
-      border-radius: 24px;
-      overflow: hidden;
-    }
- 
-    .community-video video,
-    .community-photo img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-    }
- 
+.community-photo {
+  border-radius: 24px;
+  overflow: hidden;
+}
+
+.community-video video,
+.community-photo img {
+  width: 100%;
+  display: block;
+  object-fit: cover;
+}
+
+.community-video video {
+  height: 360px;
+}
+
+.community-photo img {
+  height: 360px;
+}
+
+.nav {
+  transition: transform .28s var(--ease), background .25s var(--ease);
+}
+
+.nav.nav-hidden {
+  transform: translateY(-100%);
+}
+
+.mobile-nav {
+  display: none;
+  background: rgba(8,17,32,.98);
+  padding: 12px 5% 18px;
+  border-bottom: 1px solid rgba(255,255,255,.06);
+  position: fixed;
+  top: 75px;
+  left: 0;
+  right: 0;
+  z-index: 999;
+  max-height: calc(100vh - 75px);
+  overflow-y: auto;
+}
+
+.mobile-nav.open {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
     .page-head { padding: 124px 5% 28px; }
  
     .variants-grid {
@@ -1690,109 +1725,153 @@
       </div>
     </section>
   </div>
- 
-  <script>
-    const pages = ['home', 'variants', 'health', 'pro', 'support', 'faq'];
- 
-    function showPage(name) {
-      pages.forEach((page) => {
-        document.getElementById(`page-${page}`).classList.toggle('active', page === name);
-        const link = document.getElementById(`nl-${page}`);
-        if (link) {
-          link.classList.toggle('active', page === name);
-        }
-      });
- 
-      window.scrollTo({ top: 0, behavior: 'smooth' });
+ <script>
+  const pages = ['home', 'variants', 'health', 'pro', 'support', 'faq'];
+  const mobileNav = document.getElementById('mobileNav');
+  const mainNav = document.getElementById('mainNav');
+  const burger = document.getElementById('burger');
+  const installBtn = document.getElementById('installBtn');
+
+  function showPage(name) {
+    pages.forEach((page) => {
+      document.getElementById(`page-${page}`).classList.toggle('active', page === name);
+      const link = document.getElementById(`nl-${page}`);
+      if (link) {
+        link.classList.toggle('active', page === name);
+      }
+    });
+
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    closeMobile();
+  }
+
+  function toggleMobile() {
+    mobileNav.classList.toggle('open');
+  }
+
+  function closeMobile() {
+    mobileNav.classList.remove('open');
+  }
+
+  function toggleFaq(el) {
+    el.parentElement.classList.toggle('open');
+  }
+
+  function showSupportPanel(name) {
+    const tabs = ['clinics', 'contacts', 'navigation'];
+
+    tabs.forEach((tab) => {
+      const panel = document.getElementById(`panel-${tab}`);
+      const tabBtn = document.getElementById(`tab-${tab}`);
+
+      if (panel) {
+        panel.classList.toggle('active', tab === name);
+      }
+
+      if (tabBtn) {
+        tabBtn.classList.toggle('active', tab === name);
+      }
+    });
+  }
+
+  function submitForm(e) {
+    e.preventDefault();
+
+    const form = e.currentTarget;
+    const status = document.getElementById('formStatus');
+    const formData = new FormData(form);
+    const recipient = form.dataset.recipient || 'info@xplodemediazm';
+    const topic = formData.get('topic') || 'General enquiry';
+    const subject = encodeURIComponent(`Website enquiry: ${topic}`);
+    const body = encodeURIComponent(
+      `Full Name: ${formData.get('name') || ''}\n` +
+      `Phone Number: ${formData.get('phone') || ''}\n` +
+      `Email Address: ${formData.get('email') || ''}\n` +
+      `Topic: ${topic}\n\n` +
+      `Message:\n${formData.get('message') || ''}`
+    );
+
+    window.location.href = `mailto:${recipient}?subject=${subject}&body=${body}`;
+    status.textContent = `Opening your mail app for ${recipient}.`;
+  }
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach((entry) => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('vis');
+      }
+    });
+  }, { threshold: 0.12 });
+
+  document.querySelectorAll('.fade-up').forEach((el) => observer.observe(el));
+
+  let deferredPrompt;
+
+  window.addEventListener('beforeinstallprompt', (e) => {
+    e.preventDefault();
+    deferredPrompt = e;
+    installBtn.classList.add('show');
+  });
+
+  installBtn.addEventListener('click', async () => {
+    if (!deferredPrompt) return;
+
+    deferredPrompt.prompt();
+    await deferredPrompt.userChoice;
+    deferredPrompt = null;
+    installBtn.classList.remove('show');
+  });
+
+  let lastScrollY = window.scrollY;
+  let ticking = false;
+
+  function handleScroll() {
+    const currentScrollY = window.scrollY;
+
+    if (currentScrollY > 20) {
       closeMobile();
     }
- 
-    function toggleMobile() {
-      document.getElementById('mobileNav').classList.toggle('open');
-    }
- 
-    function closeMobile() {
-      document.getElementById('mobileNav').classList.remove('open');
-    }
- 
-    function toggleFaq(el) {
-      el.parentElement.classList.toggle('open');
-    }
- 
-    function showSupportPanel(name) {
-      const tabs = ['clinics', 'contacts', 'navigation'];
- 
-      tabs.forEach((tab) => {
-        const panel = document.getElementById(`panel-${tab}`);
-        const tabBtn = document.getElementById(`tab-${tab}`);
- 
-        if (panel) {
-          panel.classList.toggle('active', tab === name);
-        }
- 
-        if (tabBtn) {
-          tabBtn.classList.toggle('active', tab === name);
-        }
-      });
-    }
- 
-    function submitForm(e) {
-      e.preventDefault();
- 
-      const form = e.currentTarget;
-      const status = document.getElementById('formStatus');
-      const formData = new FormData(form);
-      const recipient = form.dataset.recipient || 'info@xplodemediazm';
-      const topic = formData.get('topic') || 'General enquiry';
-      const subject = encodeURIComponent(`Website enquiry: ${topic}`);
-      const body = encodeURIComponent(
-        `Full Name: ${formData.get('name') || ''}\n` +
-        `Phone Number: ${formData.get('phone') || ''}\n` +
-        `Email Address: ${formData.get('email') || ''}\n` +
-        `Topic: ${topic}\n\n` +
-        `Message:\n${formData.get('message') || ''}`
-      );
- 
-      window.location.href = `mailto:${recipient}?subject=${subject}&body=${body}`;
-      status.textContent = `Opening your mail app for ${recipient}.`;
-    }
- 
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach((entry) => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add('vis');
-        }
-      });
-    }, { threshold: 0.12 });
- 
-    document.querySelectorAll('.fade-up').forEach((el) => observer.observe(el));
- 
-    let deferredPrompt;
-    const installBtn = document.getElementById('installBtn');
- 
-    window.addEventListener('beforeinstallprompt', (e) => {
-      e.preventDefault();
-      deferredPrompt = e;
-      installBtn.classList.add('show');
-    });
- 
-    installBtn.addEventListener('click', async () => {
-      if (!deferredPrompt) {
-        return;
+
+    if (window.innerWidth <= 860) {
+      if (currentScrollY > lastScrollY && currentScrollY > 120) {
+        mainNav.classList.add('nav-hidden');
+      } else {
+        mainNav.classList.remove('nav-hidden');
       }
- 
-      deferredPrompt.prompt();
-      await deferredPrompt.userChoice;
-      deferredPrompt = null;
-      installBtn.classList.remove('show');
-    });
- 
-    if ('serviceWorker' in navigator) {
-      window.addEventListener('load', () => {
-        navigator.serviceWorker.register('./sw.js').catch(console.error);
-      });
+    } else {
+      mainNav.classList.remove('nav-hidden');
     }
-  </script>
+
+    lastScrollY = currentScrollY;
+    ticking = false;
+  }
+
+  window.addEventListener('scroll', () => {
+    if (!ticking) {
+      window.requestAnimationFrame(handleScroll);
+      ticking = true;
+    }
+  }, { passive: true });
+
+  window.addEventListener('resize', () => {
+    if (window.innerWidth > 860) {
+      closeMobile();
+      mainNav.classList.remove('nav-hidden');
+    }
+  });
+
+  document.addEventListener('click', (e) => {
+    if (!mobileNav.contains(e.target) && !burger.contains(e.target)) {
+      closeMobile();
+    }
+  });
+
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('./sw.js').catch(console.error);
+    });
+  }
+</script>
 </body>
 </html>
  
