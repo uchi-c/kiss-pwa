@@ -1629,10 +1629,10 @@
           </p>
           <div class="form-note">
             This form currently opens a draft in the user's mail app for
-            <a href="mailto:info@xplodemediazm">info@xplodemediazm</a>.
+            <a href="mailto:info@xplodemediazm.com">info@xplodemediazm</a>.
           </div>
  
-          <form class="contact-form" onsubmit="submitForm(event)" data-recipient="info@xplodemediazm">
+          <form class="contact-form" onsubmit="submitForm(event)">
             <div class="contact-grid">
               <div class="field">
                 <label for="name">Full Name</label>
@@ -1774,26 +1774,45 @@
     });
   }
 
-  function submitForm(e) {
-    e.preventDefault();
+ async function submitForm(e) {
+  e.preventDefault();
 
-    const form = e.currentTarget;
-    const status = document.getElementById('formStatus');
-    const formData = new FormData(form);
-    const recipient = form.dataset.recipient || 'info@xplodemediazm';
-    const topic = formData.get('topic') || 'General enquiry';
-    const subject = encodeURIComponent(`Website enquiry: ${topic}`);
-    const body = encodeURIComponent(
-      `Full Name: ${formData.get('name') || ''}\n` +
-      `Phone Number: ${formData.get('phone') || ''}\n` +
-      `Email Address: ${formData.get('email') || ''}\n` +
-      `Topic: ${topic}\n\n` +
-      `Message:\n${formData.get('message') || ''}`
-    );
+  const form = e.currentTarget;
+  const status = document.getElementById('formStatus');
+  const formData = new FormData(form);
 
-    window.location.href = `mailto:${recipient}?subject=${subject}&body=${body}`;
-    status.textContent = `Opening your mail app for ${recipient}.`;
+  const payload = {
+    name: formData.get('name') || '',
+    email: formData.get('email') || '',
+    subject: formData.get('topic') || 'General enquiry',
+    message:
+      `Phone Number: ${formData.get('phone') || ''}\n\n` +
+      `${formData.get('message') || ''}`
+  };
+
+  status.textContent = 'Sending message...';
+
+  try {
+    const response = await fetch('/api/contact', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(payload)
+    });
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      throw new Error(data.error || 'Failed to send message.');
+    }
+
+    status.textContent = 'Message sent successfully.';
+    form.reset();
+  } catch (error) {
+    status.textContent = error.message || 'Something went wrong while sending.';
   }
+}
 
   const observer = new IntersectionObserver((entries) => {
     entries.forEach((entry) => {
