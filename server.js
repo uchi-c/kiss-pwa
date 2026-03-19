@@ -33,7 +33,7 @@ app.post("/api/contact", async (req, res) => {
     }
 
     // Env vars (set these in Render -> Environment)
-    const host = process.env.SMTP_HOST || "smtp.gmail.com";
+    const host = process.env.SMTP_HOST || "smtp.mail.privateemail.com";
     const smtpPort = Number(process.env.SMTP_PORT || 465);
     const secure = String(process.env.SMTP_SECURE || "true") === "true";
 
@@ -49,11 +49,15 @@ app.post("/api/contact", async (req, res) => {
     }
 
     const transporter = nodemailer.createTransport({
-      host,
-      port: smtpPort,
-      secure, // true for 465, false for 587
-      auth: { user: smtpUser, pass: smtpPass }
-    });
+  host: process.env.SMTP_HOST || "mail.privateemail.com",
+  port: Number(process.env.SMTP_PORT || 465),
+  secure: String(process.env.SMTP_SECURE || "true") === "true",
+  auth: {
+    user: process.env.SMTP_USER,
+    pass: process.env.SMTP_PASS
+  }
+});
+
 
     // Basic sanitization
     const safe = (s) => String(s || "").replace(/[<>]/g, "").trim();
