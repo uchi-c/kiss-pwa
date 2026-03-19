@@ -33,20 +33,23 @@ app.post("/api/contact", async (req, res) => {
     }
 
     // Env vars (set these in Render -> Environment)
-    const host = process.env.SMTP_HOST || "smtp.mail.privateemail.com";
-    const smtpPort = Number(process.env.SMTP_PORT || 465);
-    const secure = String(process.env.SMTP_SECURE || "true") === "true";
+   const smtpUser = process.env.SMTP_USER;
+const smtpPass = process.env.SMTP_PASS;
+const toEmail = process.env.TO_EMAIL;
 
-    const smtpUser = process.env.SMTP_USER;
-    const smtpPass = process.env.SMTP_PASS;
-    const toEmail = process.env.TO_EMAIL;
+const host = process.env.SMTP_HOST || "mail.privateemail.com";
+const smtpPort = Number(process.env.SMTP_PORT || 465);
+const secure = String(process.env.SMTP_SECURE || "true") === "true";
 
-    if (!smtpUser || !smtpPass || !toEmail) {
-      return res.status(500).json({
-        error:
-          "Email not configured. Set SMTP_USER, SMTP_PASS, and TO_EMAIL in environment variables."
-      });
-    }
+const transporter = nodemailer.createTransport({
+  host,
+  port: smtpPort,
+  secure,
+  auth: {
+    user: smtpUser,
+    pass: smtpPass
+  }
+});
 
     const transporter = nodemailer.createTransport({
   host: process.env.SMTP_HOST || "mail.privateemail.com",
