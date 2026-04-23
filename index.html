@@ -469,25 +469,70 @@
     }
  
     .community-video,
-.community-photo {
-  border-radius: 24px;
-  overflow: hidden;
-}
+    .community-photo {
+      border-radius: 24px;
+      overflow: hidden;
+    }
 
-.community-video video,
-.community-photo img {
-  width: 100%;
-  display: block;
-  object-fit: cover;
-}
+    .community-video video,
+    .community-photo img {
+      width: 100%;
+      display: block;
+      object-fit: cover;
+    }
 
-.community-video video {
-  height: 360px;
-}
+    .community-video video,
+    .community-photo img {
+      height: 360px;
+    }
 
-.community-photo img {
-  height: 360px;
-}
+    .video-fallback {
+      position: relative;
+      height: 360px;
+      cursor: pointer;
+      background: #0b1628;
+    }
+
+    .video-fallback img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      filter: brightness(.6);
+    }
+
+    .video-play {
+      position: absolute;
+      inset: 0;
+      display: grid;
+      place-items: center;
+      font-weight: 800;
+      font-size: 1rem;
+      color: #fff;
+      text-align: center;
+      padding: 20px;
+    }
+
+    .quick-url {
+      margin-top: 18px;
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+      background: rgba(255,255,255,.06);
+      border: 1px solid rgba(255,255,255,.12);
+      border-radius: 14px;
+      padding: 10px 14px;
+      font-size: .9rem;
+    }
+
+    .copy-url {
+      background: rgba(232,0,29,.18);
+      color: #fff;
+      border: 1px solid rgba(232,0,29,.4);
+      border-radius: 10px;
+      padding: 8px 12px;
+      font-weight: 700;
+    }
 
 .nav {
   transition: transform .28s var(--ease), background .25s var(--ease);
@@ -516,6 +561,58 @@
   flex-direction: column;
   gap: 8px;
 }
+    .stockist-cta {
+      margin-top: 12px;
+      width: 100%;
+      justify-content: center;
+    }
+
+    .health-bridge {
+      margin-top: 16px;
+    }
+
+    .zambia-strip {
+      margin-top: 24px;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 14px;
+    }
+
+    .zambia-chip {
+      padding: 14px;
+      border-radius: 14px;
+      background: rgba(255,255,255,.04);
+      border: 1px solid rgba(255,255,255,.08);
+      font-size: .88rem;
+      color: var(--soft);
+    }
+
+    .pro-cta-row {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-top: 18px;
+    }
+
+    .resource-grid {
+      margin-top: 24px;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+      gap: 18px;
+    }
+
+    .resource-card {
+      padding: 20px;
+    }
+
+    .resource-card p {
+      color: var(--muted);
+      font-size: .9rem;
+      margin: 10px 0 14px;
+    }
+
+    .status-ok { color: #81f5b2; }
+    .status-bad { color: #ffd1d9; }
     .page-head { padding: 124px 5% 28px; }
  
     .variants-grid {
@@ -1035,6 +1132,11 @@
       .page-head { padding-top: 110px; }
       .pack-grid { grid-template-columns: 1fr 1fr; }
       .footer-grid { grid-template-columns: 1fr; }
+      .video-fallback,
+      .community-video video,
+      .community-photo img {
+        height: 260px;
+      }
     }
  
     @media (max-width: 520px) {
@@ -1046,6 +1148,12 @@
         width: 100%;
         justify-content: center;
         text-align: center;
+      }
+    }
+
+    @media (prefers-reduced-data: reduce) {
+      body {
+        background-attachment: scroll;
       }
     }
   </style>
@@ -1065,12 +1173,12 @@
     </div>
  
     <ul class="nav-links">
-      <li><a href="#" id="nl-home" class="active" onclick="showPage('home'); return false;">Home</a></li>
-      <li><a href="#" id="nl-variants" onclick="showPage('variants'); return false;">Game Modes</a></li>
-      <li><a href="#" id="nl-health" onclick="showPage('health'); return false;">Health Hub</a></li>
-      <li><a href="#" id="nl-pro" onclick="showPage('pro'); return false;">Health Pro</a></li>
-      <li><a href="#" id="nl-support" onclick="showPage('support'); return false;">Find Support</a></li>
-      <li><a href="#" id="nl-faq" onclick="showPage('faq'); return false;">FAQ</a></li>
+      <li><a href="#home" id="nl-home" class="active" onclick="showPage('home'); return false;">Home</a></li>
+      <li><a href="#variants" id="nl-variants" onclick="showPage('variants'); return false;">Game Modes</a></li>
+      <li><a href="#health" id="nl-health" onclick="showPage('health'); return false;">Health Hub</a></li>
+      <li><a href="#pro" id="nl-pro" onclick="showPage('pro'); return false;">Health Pro</a></li>
+      <li><a href="#support" id="nl-support" onclick="showPage('support'); return false;">Find Support</a></li>
+      <li><a href="#faq" id="nl-faq" onclick="showPage('faq'); return false;">FAQ</a></li>
     </ul>
  
     <div class="nav-actions">
@@ -1098,8 +1206,12 @@
         <h1>Protection Meets <span class="r">Pleasure.</span></h1>
         <p>
           Stay safe. Stay confident. Choose your protection. Kiss Condoms brings together
-          sexual health education, product visibility, and support resources in one bold youth-focused experience.
+          sexual health education, product visibility, and support resources in one bold youth-focused experience for Zambia.
         </p>
+        <div class="quick-url">
+          <span>Quick link:</span><code id="quickUrlText">kisszm.app</code>
+          <button class="copy-url" type="button" onclick="copyQuickUrl()">Copy URL</button>
+        </div>
  
         <div class="hero-actions">
           <button class="btn-primary" type="button" onclick="showPage('variants')">Explore Variants</button>
@@ -1172,29 +1284,27 @@
         <div class="section-tag">Ready to Play</div>
         <h2 class="section-h">The Kiss <span class="r">Community</span></h2>
         <p class="section-sub">Real protection. Real people. Real sexual health awareness for Zambia.</p>
- <video controls autoplay muted loop playsinline preload="metadata">
-  <source
-    src="https://res.cloudinary.com/dqfx4qybg/video/upload/v1772691895/kiss-community_s8d4ma.mp4"
-    type="video/mp4"
-  />
-  <source
-    src="https://res.cloudinary.com/dqfx4qybg/video/upload/v1772691895/kiss-community_s8d4ma.mov"
-    type="video/quicktime"
-  />
-  Your browser does not support the video tag.
-</video>
         <div class="brand-gallery">
           <div class="community-video card fade-up">
-            
+            <div class="video-fallback" id="videoFallback" role="button" tabindex="0" onclick="loadCommunityVideo()" onkeydown="if(event.key==='Enter'){loadCommunityVideo();}">
+              <img src="WhatsApp_Image_2026-03-01_at_11_40_09_AM.jpeg" alt="Community launch moment in Zambia" loading="lazy" />
+              <div class="video-play">Tap to play community video<br/><small>Optimized for low-data browsing</small></div>
+            </div>
           </div>
  
           <div class="community-photo card fade-up">
             <img
               src="WhatsApp_Image_2026-03-01_at_11_40_06_AM.jpeg"
-              alt="Kiss campaign visual"
+              alt="Kiss activation with local Zambian community audience"
+              loading="lazy"
               onerror="this.style.display='none'"
             />
           </div>
+        </div>
+        <div class="zambia-strip fade-up">
+          <div class="zambia-chip"><strong>Lusaka focus:</strong> youth-friendly awareness touchpoints and stockist guidance.</div>
+          <div class="zambia-chip"><strong>Local context:</strong> answers tailored for Zambia clinics, campuses, and community events.</div>
+          <div class="zambia-chip"><strong>Mobile-first:</strong> lightweight access for users on slower data bundles.</div>
         </div>
       </div>
     </section>
@@ -1296,6 +1406,7 @@
               <div class="protect-box">
                 Protection against unintended pregnancy and many STI risks when used correctly and consistently.
               </div>
+              <button class="btn-primary stockist-cta" type="button" onclick="showPage('support'); showSupportPanel('contacts');">Find a Stockist</button>
               <div class="use-disclaimer">No method is 100% effective. Correct and consistent use matters.</div>
             </div>
           </div>
@@ -1321,6 +1432,7 @@
               <div class="protect-box">
                 Flavour and style do not replace correct use. Safety still depends on proper handling and fit.
               </div>
+              <button class="btn-primary stockist-cta" type="button" onclick="showPage('support'); showSupportPanel('contacts');">See Availability</button>
               <div class="use-disclaimer">Always check packaging and expiry date before use.</div>
             </div>
           </div>
@@ -1346,6 +1458,7 @@
               <div class="protect-box">
                 Texturing should never compromise safe application, lubrication, or correct removal.
               </div>
+              <button class="btn-primary stockist-cta" type="button" onclick="showPage('support'); showSupportPanel('contacts');">Where to Buy</button>
               <div class="use-disclaimer">Use extra water-based lubricant if needed for comfort.</div>
             </div>
           </div>
@@ -1371,6 +1484,7 @@
               <div class="protect-box">
                 Control-focused products still require correct storage, opening, fit, and disposal.
               </div>
+              <button class="btn-primary stockist-cta" type="button" onclick="showPage('support'); showSupportPanel('contacts');">Find a Stockist</button>
               <div class="use-disclaimer">Check packaging instructions before use.</div>
             </div>
           </div>
@@ -1448,6 +1562,7 @@
               <p>
                 Good sexual health systems connect awareness, prevention, product use, and access to care.
               </p>
+              <button class="btn-outline health-bridge" type="button" onclick="showPage('support')">Go to Find Support</button>
             </div>
           </div>
         </div>
@@ -1461,7 +1576,7 @@
         </div>
  
         <div class="guide-wrap fade-up">
-          <img src="condom-guide.png" alt="Educational guide showing correct use of condoms" />
+          <img src="condom-guide.png" alt="Educational guide showing correct use of condoms for Zambian audiences" loading="lazy" />
         </div>
       </div>
     </section>
@@ -1471,10 +1586,14 @@
     <section class="page-head">
       <div class="container">
         <div class="section-tag">Health Pro</div>
-        <h1 class="page-title">Professional <span class="r">Perspective</span></h1>
+        <h1 class="page-title">For Health Workers, Peer Educators & <span class="r">Outreach Teams</span></h1>
         <p class="section-sub">
-          How the platform supports health communication, youth engagement, and behaviour change.
+          This page is for professionals running sexual health outreach in Zambia. Use it to share trusted information fast, access downloadable materials, and keep support pathways visible even on low-connectivity days.
         </p>
+        <div class="pro-cta-row">
+          <button class="btn-primary" type="button" onclick="triggerInstall()">Download / Install App</button>
+          <button class="btn-outline" type="button" onclick="showPage('support')">Open Find Support</button>
+        </div>
       </div>
     </section>
  
@@ -1483,35 +1602,50 @@
         <div class="edu-grid">
           <div class="edu-card card fade-up">
             <div class="edu-icon">📢</div>
-            <div class="edu-title">Behaviour Change Communication</div>
+            <div class="edu-title">Designed for real community engagement</div>
             <div class="edu-body">
               <p>
-                The site uses youth-friendly language, strong branding, and product-centered storytelling to make
-                health information feel approachable rather than clinical.
+                The language, visuals, and call-to-actions are built to help educators connect quickly with young people in clinics, campuses, and community settings.
               </p>
             </div>
           </div>
  
           <div class="edu-card card fade-up">
             <div class="edu-icon">🎯</div>
-            <div class="edu-title">Product Visibility Strategy</div>
+            <div class="edu-title">Fast action during outreach sessions</div>
             <div class="edu-body">
               <p>
-                Pack shots are now clearer and more prominent so users can easily identify variants and associate
-                them with the correct message and purpose.
+                Teams can jump from product education to stockist guidance and support contacts in a few taps, making field conversations clearer and more actionable.
               </p>
             </div>
           </div>
  
           <div class="edu-card card fade-up">
             <div class="edu-icon">📱</div>
-            <div class="edu-title">PWA Upgrade</div>
+            <div class="edu-title">Why the PWA matters</div>
             <div class="edu-body">
               <p>
-                This version can be installed like an app on supported phones and laptops, making the project look
-                stronger during presentation and more polished for lecturers.
+                Install once for quick home-screen access, cached pages for offline resource viewing, and easier use during outreach where network coverage is weak.
               </p>
             </div>
+          </div>
+        </div>
+
+        <div class="resource-grid">
+          <div class="resource-card card fade-up">
+            <h3>PDF Brochure</h3>
+            <p>A concise overview of variants, key messages, and referral links for partner presentations.</p>
+            <a class="btn-outline" href="resources/kiss-health-pro-brochure.pdf" download>Download Brochure</a>
+          </div>
+          <div class="resource-card card fade-up">
+            <h3>Printable Poster</h3>
+            <p>Print-ready A4 poster promoting safer choices, helplines, and stockist discovery.</p>
+            <a class="btn-outline" href="resources/kiss-find-support-poster.pdf" download>Download Poster</a>
+          </div>
+          <div class="resource-card card fade-up">
+            <h3>Awareness Toolkit</h3>
+            <p>Field handout with practical guidance on condom use, storage, breakage response, and referrals.</p>
+            <a class="btn-outline" href="resources/kiss-awareness-toolkit.pdf" download>Download Toolkit</a>
           </div>
         </div>
       </div>
@@ -1524,7 +1658,7 @@
         <div class="section-tag">Find Support</div>
         <h1 class="page-title">Help, Clinics and <span class="r">Access</span></h1>
         <p class="section-sub">
-          Locate support points, share enquiries, and explain delivery and tracking to TAs.
+          Locate support points, send private enquiries, and get connected to relevant sexual health services in Zambia.
         </p>
       </div>
     </section>
@@ -1544,10 +1678,10 @@
             <div class="sup-text">Tap to view contact lines, email points, and help access.</div>
           </button>
  
-          <button class="support-card card fade-up" type="button" onclick="showSupportPanel('navigation')">
+          <button class="support-card card fade-up" type="button" onclick="showSupportPanel('journey')">
             <div class="sup-ico">🧭</div>
-            <div class="sup-title">Awareness Navigation</div>
-            <div class="sup-text">Tap to understand how this platform guides users through support.</div>
+            <div class="sup-title">Care Journey</div>
+            <div class="sup-text">See the step-by-step path from awareness to clinic and follow-up support.</div>
           </button>
         </div>
  
@@ -1558,8 +1692,8 @@
           <button class="support-tab" id="tab-contacts" type="button" onclick="showSupportPanel('contacts')">
             Support Contacts
           </button>
-          <button class="support-tab" id="tab-navigation" type="button" onclick="showSupportPanel('navigation')">
-            Awareness Navigation
+          <button class="support-tab" id="tab-journey" type="button" onclick="showSupportPanel('journey')">
+            Care Journey
           </button>
         </div>
  
@@ -1611,26 +1745,22 @@
           </div>
         </div>
  
-        <div class="support-panel fade-up" id="panel-navigation">
+        <div class="support-panel fade-up" id="panel-journey">
           <div class="info-panel">
             <div class="section-tag">User Journey</div>
-            <h2 class="section-h" style="font-size: 1.8rem;">Awareness <span class="r">Navigation</span></h2>
+            <h2 class="section-h" style="font-size: 1.8rem;">Care <span class="r">Journey</span></h2>
             <p class="section-sub" style="max-width: 900px;">
-              This section helps users move from product discovery, to sexual health learning, to real support access.
-              It makes the platform feel intentional instead of just decorative.
+              Step 1: learn about options in Game Modes. Step 2: confirm safe use in Health Hub. Step 3: contact support or locate a clinic using this section for practical next steps.
             </p>
           </div>
         </div>
  
         <div class="contact-card card fade-up">
-          <h2 class="section-h" style="font-size: 1.7rem;">Private Email Contact Form</h2>
+          <h2 class="section-h" style="font-size: 1.7rem;">Private Contact Form</h2>
           <p class="section-sub" style="margin-bottom: 16px;">
-            Send enquiries through the site and route them to the Namecheap Private Email inbox for the project.
+            Send enquiries directly through the site. Messages are submitted securely to the outreach inbox.
           </p>
-          <div class="form-note">
-            This form currently opens a draft in the user's mail app for
-            <a href="mailto:info@xplodemediazm.com">info@xplodemediazm</a>.
-          </div>
+          <div class="form-note">You will see a clear success or error message after submission.</div>
  
           <form class="contact-form" onsubmit="submitForm(event)">
             <div class="contact-grid">
@@ -1647,11 +1777,11 @@
             <div class="contact-grid">
               <div class="field">
                 <label for="email">Email Address</label>
-                <input id="email" name="email" type="email" />
+                <input id="email" name="email" type="email" required />
               </div>
               <div class="field">
                 <label for="topic">Topic</label>
-                <input id="topic" name="topic" type="text" placeholder="Support, clinic info, partnership, education" />
+                <input id="topic" name="topic" type="text" placeholder="Support, clinic info, partnership, education" required />
               </div>
             </div>
  
@@ -1661,7 +1791,7 @@
             </div>
  
             <button class="btn-primary" type="submit">Send Enquiry</button>
-            <div class="form-status" id="formStatus">Fill the form to open a draft in your mail app.</div>
+            <div class="form-status" id="formStatus" aria-live="polite">Complete the form to submit your enquiry.</div>
           </form>
         </div>
       </div>
@@ -1684,6 +1814,26 @@
         <div class="faq-wrap">
           <div class="faq-item card fade-up">
             <div class="faq-q" onclick="toggleFaq(this)">
+              <strong>Where can I buy Kiss Condoms?</strong>
+              <span class="faq-ico">+</span>
+            </div>
+            <div class="faq-a">
+              Tap any “Find a Stockist” button in Game Modes or open Find Support → Support Contacts for local stockist guidance.
+            </div>
+          </div>
+ 
+          <div class="faq-item card fade-up">
+            <div class="faq-q" onclick="toggleFaq(this)">
+              <strong>What do I do if a condom breaks?</strong>
+              <span class="faq-ico">+</span>
+            </div>
+            <div class="faq-a">
+              Stop immediately, replace with a new condom, and consider emergency contraception and STI/HIV testing support as soon as possible.
+            </div>
+          </div>
+ 
+          <div class="faq-item card fade-up">
+            <div class="faq-q" onclick="toggleFaq(this)">
               <strong>Are condoms 100% effective?</strong>
               <span class="faq-ico">+</span>
             </div>
@@ -1694,31 +1844,71 @@
  
           <div class="faq-item card fade-up">
             <div class="faq-q" onclick="toggleFaq(this)">
-              <strong>Why should I check the expiry date?</strong>
+              <strong>How do I know the right condom size?</strong>
               <span class="faq-ico">+</span>
             </div>
             <div class="faq-a">
-              Expired condoms may weaken over time, reducing reliability and safety.
+              Most users start with regular fit (53mm nominal width here). If condoms slip or feel too tight, seek guidance from trained providers for better fit options.
             </div>
           </div>
- 
+
           <div class="faq-item card fade-up">
             <div class="faq-q" onclick="toggleFaq(this)">
-              <strong>Why add images to the condom use guide?</strong>
+              <strong>Can I use oil-based lubricants with condoms?</strong>
               <span class="faq-ico">+</span>
             </div>
             <div class="faq-a">
-              Visual instruction makes the process clearer, faster to understand, and easier to remember.
+              No. Use water-based or silicone-based lubricants with latex condoms. Oils can weaken latex and increase breakage risk.
             </div>
           </div>
- 
+
           <div class="faq-item card fade-up">
             <div class="faq-q" onclick="toggleFaq(this)">
-              <strong>What does the PWA upgrade do?</strong>
+              <strong>How should condoms be stored?</strong>
               <span class="faq-ico">+</span>
             </div>
             <div class="faq-a">
-              It allows the site to be installed like an app on supported devices, improving presentation quality and usability.
+              Keep in a cool, dry place away from direct sunlight and heat. Avoid storing for long periods in wallets, cars, or tight pockets.
+            </div>
+          </div>
+
+          <div class="faq-item card fade-up">
+            <div class="faq-q" onclick="toggleFaq(this)">
+              <strong>What if this is my first time using one?</strong>
+              <span class="faq-ico">+</span>
+            </div>
+            <div class="faq-a">
+              Practice opening and rolling onto clean fingers first. In real use, pinch the tip, roll fully down, and hold the base during withdrawal.
+            </div>
+          </div>
+
+          <div class="faq-item card fade-up">
+            <div class="faq-q" onclick="toggleFaq(this)">
+              <strong>What if I have latex allergies or irritation?</strong>
+              <span class="faq-ico">+</span>
+            </div>
+            <div class="faq-a">
+              Stop use and seek medical advice. A provider can suggest non-latex alternatives and check whether irritation is from fragrance, lube, or another cause.
+            </div>
+          </div>
+
+          <div class="faq-item card fade-up">
+            <div class="faq-q" onclick="toggleFaq(this)">
+              <strong>Where can I get testing and support in Zambia?</strong>
+              <span class="faq-ico">+</span>
+            </div>
+            <div class="faq-a">
+              Open Find Support to use the clinic map, direct phone contacts, and private enquiry form for referrals and follow-up.
+            </div>
+          </div>
+
+          <div class="faq-item card fade-up">
+            <div class="faq-q" onclick="toggleFaq(this)">
+              <strong>What does the PWA app option help with?</strong>
+              <span class="faq-ico">+</span>
+            </div>
+            <div class="faq-a">
+              It gives quick home-screen access, installable convenience, and cached pages for easier use during outreach when network quality drops.
             </div>
           </div>
         </div>
@@ -1741,6 +1931,9 @@
       }
     });
 
+    if (window.location.hash !== `#${name}`) {
+      window.history.replaceState(null, '', `#${name}`);
+    }
     window.scrollTo({ top: 0, behavior: 'smooth' });
     closeMobile();
   }
@@ -1758,7 +1951,7 @@
   }
 
   function showSupportPanel(name) {
-    const tabs = ['clinics', 'contacts', 'navigation'];
+    const tabs = ['clinics', 'contacts', 'journey'];
 
     tabs.forEach((tab) => {
       const panel = document.getElementById(`panel-${tab}`);
@@ -1772,6 +1965,34 @@
         tabBtn.classList.toggle('active', tab === name);
       }
     });
+  }
+
+  function copyQuickUrl() {
+    const quick = document.getElementById('quickUrlText').textContent.trim();
+    navigator.clipboard.writeText(`https://${quick}`).then(() => {
+      const btn = document.querySelector('.copy-url');
+      const previous = btn.textContent;
+      btn.textContent = 'Copied';
+      setTimeout(() => { btn.textContent = previous; }, 1200);
+    }).catch(() => {});
+  }
+
+  function loadCommunityVideo() {
+    const fallback = document.getElementById('videoFallback');
+    if (!fallback) return;
+    fallback.outerHTML = `
+      <video controls playsinline preload="none" poster="WhatsApp_Image_2026-03-01_at_11_40_09_AM.jpeg">
+        <source src="https://res.cloudinary.com/dqfx4qybg/video/upload/f_auto,q_auto:eco,w_960/v1772691895/kiss-community_s8d4ma.mp4" type="video/mp4" />
+        Your browser does not support the video tag.
+      </video>`;
+  }
+
+  function triggerInstall() {
+    if (installBtn.classList.contains('show')) {
+      installBtn.click();
+      return;
+    }
+    alert('Install prompt appears on supported browsers. On iPhone use Share → Add to Home Screen.');
   }
 
  async function submitForm(e) {
@@ -1791,6 +2012,7 @@
   };
 
   status.textContent = 'Sending message...';
+  status.classList.remove('status-ok', 'status-bad');
 
   try {
     const response = await fetch('/api/contact', {
@@ -1807,10 +2029,12 @@
       throw new Error(data.error || 'Failed to send message.');
     }
 
-    status.textContent = 'Message sent successfully.';
+    status.textContent = 'Message sent successfully. A team member will follow up shortly.';
+    status.classList.add('status-ok');
     form.reset();
   } catch (error) {
     status.textContent = error.message || 'Something went wrong while sending.';
+    status.classList.add('status-bad');
   }
 }
 
@@ -1884,6 +2108,11 @@
       closeMobile();
     }
   });
+
+  const hashPage = window.location.hash.replace('#', '');
+  if (pages.includes(hashPage)) {
+    showPage(hashPage);
+  }
 
   if ('serviceWorker' in navigator) {
     window.addEventListener('load', () => {
