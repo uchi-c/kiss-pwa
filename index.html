@@ -1758,31 +1758,25 @@
         <div class="contact-card card fade-up">
           <h2 class="section-h" style="font-size: 1.7rem;">Private Contact Form</h2>
           <p class="section-sub" style="margin-bottom: 16px;">
-            Send enquiries directly through the site. Messages are submitted securely to the outreach inbox.
+            Your message will be sent securely to our support team. This form is for general support and questions, not emergencies.
           </p>
           <div class="form-note">You will see a clear success or error message after submission.</div>
  
-          <form class="contact-form" onsubmit="submitForm(event)">
+          <form class="contact-form" id="contactForm" method="POST" novalidate>
             <div class="contact-grid">
               <div class="field">
                 <label for="name">Full Name</label>
                 <input id="name" name="name" type="text" required />
               </div>
               <div class="field">
-                <label for="phone">Phone Number</label>
-                <input id="phone" name="phone" type="tel" required />
+                <label for="subject">Subject</label>
+                <input id="subject" name="subject" type="text" placeholder="Support, clinic info, partnership, education" required />
               </div>
             </div>
  
-            <div class="contact-grid">
-              <div class="field">
-                <label for="email">Email Address</label>
-                <input id="email" name="email" type="email" required />
-              </div>
-              <div class="field">
-                <label for="topic">Topic</label>
-                <input id="topic" name="topic" type="text" placeholder="Support, clinic info, partnership, education" required />
-              </div>
+            <div class="field">
+              <label for="email">Email Address</label>
+              <input id="email" name="email" type="email" required />
             </div>
  
             <div class="field">
@@ -1791,7 +1785,7 @@
             </div>
  
             <button class="btn-primary" type="submit">Send Enquiry</button>
-            <div class="form-status" id="formStatus" aria-live="polite">Complete the form to submit your enquiry.</div>
+            <div class="form-status" id="contactStatus" aria-live="polite">Complete the form to submit your enquiry.</div>
           </form>
         </div>
       </div>
@@ -1915,6 +1909,8 @@
       </div>
     </section>
   </div>
+  <script src="https://unpkg.com/@formspree/ajax@1" defer></script>
+
  <script>
   const pages = ['home', 'variants', 'health', 'pro', 'support', 'faq'];
   const mobileNav = document.getElementById('mobileNav');
@@ -1994,49 +1990,86 @@
     }
     alert('Install prompt appears on supported browsers. On iPhone use Share → Add to Home Screen.');
   }
+  window.formspree = window.formspree || function () { (formspree.q = formspree.q || []).push(arguments); };
+  formspree('initForm', { formElement: '#contactForm', formId: 'xnjlowjp' });
 
- async function submitForm(e) {
-  e.preventDefault();
+  const contactForm = document.getElementById('contactForm');
+  const contactStatus = document.getElementById('contactStatus');
+  const contactSubmitButton = contactForm ? contactForm.querySelector('button[type="submit"]') : null;
 
-  const form = e.currentTarget;
-  const status = document.getElementById('formStatus');
-  const formData = new FormData(form);
+  function setContactStatus(message, type) {
+    if (!contactStatus) return;
+    contactStatus.textContent = message;
+    contactStatus.classList.remove('status-ok', 'status-bad');
+    if (type === 'ok') contactStatus.classList.add('status-ok');
+    if (type === 'bad') contactStatus.classList.add('status-bad');
+  }
 
-  const payload = {
-    name: formData.get('name') || '',
-    email: formData.get('email') || '',
-    subject: formData.get('topic') || 'General enquiry',
-    message:
-      `Phone Number: ${formData.get('phone') || ''}\n\n` +
-      `${formData.get('message') || ''}`
-  };
+  function validateContactForm(form) {
+    const name = form.querySelector('[name="name"]');
+    const email = form.querySelector('[name="email"]');
+    const subject = form.querySelector('[name="subject"]');
+    const message = form.querySelector('[name="message"]');
 
-  status.textContent = 'Sending message...';
-  status.classList.remove('status-ok', 'status-bad');
-
-  try {
-    const response = await fetch('/api/contact', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(payload)
-    });
-
-    const data = await response.json();
-
-    if (!response.ok) {
-      throw new Error(data.error || 'Failed to send message.');
+    if (!name.value.trim() || !email.value.trim() || !subject.value.trim() || !message.value.trim()) {
+      setContactStatus('Please complete all required fields before sending.', 'bad');
+      return false;
     }
 
-    status.textContent = 'Message sent successfully. A team member will follow up shortly.';
-    status.classList.add('status-ok');
-    form.reset();
-  } catch (error) {
-    status.textContent = error.message || 'Something went wrong while sending.';
-    status.classList.add('status-bad');
+    const emailOk = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.value.trim());
+    if (!emailOk) {
+      setContactStatus('Please enter a valid email address.', 'bad');
+      return false;
+    }
+
+    return true;
   }
-}
+
+  if (contactForm) {
+    contactForm.addEventListener('submit', async (event) => {
+      event.preventDefault();
+
+      if (!validateContactForm(contactForm)) {
+        return;
+      }
+
+      const formData = new FormData(contactForm);
+
+      if (contactSubmitButton) {
+        contactSubmitButton.disabled = true;
+        contactSubmitButton.dataset.originalLabel = contactSubmitButton.textContent;
+        contactSubmitButton.textContent = 'Sending...';
+      }
+      setContactStatus('Sending your message securely...', null);
+
+      try {
+        const response = await fetch('https://formspree.io/f/xnjlowjp', {
+          method: 'POST',
+          body: formData,
+          headers: {
+            Accept: 'application/json'
+          }
+        });
+
+        const result = await response.json().catch(() => ({}));
+
+        if (!response.ok) {
+          const firstError = result?.errors?.[0]?.message;
+          throw new Error(firstError || 'We could not send your message right now. Please try again in a moment.');
+        }
+
+        contactForm.reset();
+        setContactStatus('Thank you! Your message has been sent to our support team.', 'ok');
+      } catch (error) {
+        setContactStatus(error.message || 'Submission failed. Please check your connection and try again.', 'bad');
+      } finally {
+        if (contactSubmitButton) {
+          contactSubmitButton.disabled = false;
+          contactSubmitButton.textContent = contactSubmitButton.dataset.originalLabel || 'Send Enquiry';
+        }
+      }
+    });
+  }
 
   const observer = new IntersectionObserver((entries) => {
     entries.forEach((entry) => {
