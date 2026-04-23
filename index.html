@@ -9,6 +9,11 @@
     content="Choose Your Game Mode – Kiss Condoms Zambia. Protection, education, support, and sexual health awareness."
   />
   <meta name="theme-color" content="#E8001D" />
+  <meta name="referrer" content="strict-origin-when-cross-origin" />
+  <meta
+    http-equiv="Content-Security-Policy"
+    content="default-src 'self'; img-src 'self' data: https:; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; script-src 'self' 'unsafe-inline' https://unpkg.com; font-src 'self' https://fonts.gstatic.com; connect-src 'self' https://formspree.io; frame-src https://www.google.com; media-src 'self' https://res.cloudinary.com; base-uri 'self'; form-action 'self' https://formspree.io"
+  />
  
   <link rel="manifest" href="manifest.webmanifest" />
   <link rel="apple-touch-icon" href="icon-192.png" />
@@ -955,6 +960,156 @@
       color: var(--muted);
       font-size: .92rem;
     }
+
+    .btn-primary:disabled {
+      opacity: .65;
+      cursor: not-allowed;
+      transform: none;
+      box-shadow: none;
+    }
+
+    .faq-search-wrap {
+      max-width: 900px;
+      margin: 0 auto 18px;
+    }
+
+    .faq-search-wrap input {
+      width: 100%;
+      background: rgba(0,0,0,.18);
+      color: #fff;
+      border: 1px solid rgba(255,255,255,.12);
+      border-radius: 14px;
+      padding: 13px 14px;
+      outline: none;
+    }
+
+    .faq-empty {
+      display: none;
+      margin: 10px 0 14px;
+      padding: 14px 16px;
+      border-radius: 14px;
+      border: 1px solid rgba(255,255,255,.1);
+      color: var(--muted);
+      background: rgba(255,255,255,.03);
+      text-align: center;
+    }
+
+    .faq-empty.show {
+      display: block;
+    }
+
+    .focus-visible:focus-visible,
+    a:focus-visible,
+    button:focus-visible,
+    input:focus-visible,
+    textarea:focus-visible {
+      outline: 2px solid rgba(255,45,120,.8);
+      outline-offset: 2px;
+    }
+
+    .assistant-fab {
+      position: fixed;
+      right: 18px;
+      bottom: 18px;
+      width: 62px;
+      height: 62px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--red), var(--pink));
+      color: #fff;
+      box-shadow: 0 14px 28px rgba(232,0,29,.35), 0 0 0 0 rgba(255,45,120,.35);
+      z-index: 1200;
+      font-size: 1.45rem;
+      animation: assistantPulse 2.2s ease-out infinite;
+    }
+
+    @keyframes assistantPulse {
+      0% { box-shadow: 0 14px 28px rgba(232,0,29,.35), 0 0 0 0 rgba(255,45,120,.4); }
+      70% { box-shadow: 0 14px 28px rgba(232,0,29,.35), 0 0 0 12px rgba(255,45,120,0); }
+      100% { box-shadow: 0 14px 28px rgba(232,0,29,.35), 0 0 0 0 rgba(255,45,120,0); }
+    }
+
+    .assistant-panel {
+      position: fixed;
+      right: 18px;
+      bottom: 90px;
+      width: min(350px, calc(100vw - 24px));
+      background: linear-gradient(180deg, rgba(8,17,32,.98), rgba(16,30,52,.96));
+      border: 1px solid rgba(255,255,255,.12);
+      border-radius: 18px;
+      box-shadow: var(--shadow);
+      z-index: 1200;
+      padding: 16px;
+      display: none;
+    }
+
+    .assistant-panel.open {
+      display: block;
+    }
+
+    .assistant-head {
+      display: flex;
+      align-items: start;
+      justify-content: space-between;
+      gap: 10px;
+    }
+
+    .assistant-title {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 1.05rem;
+      font-weight: 800;
+    }
+
+    .assistant-sub {
+      color: var(--muted);
+      font-size: .85rem;
+    }
+
+    .assistant-close {
+      background: rgba(255,255,255,.08);
+      color: #fff;
+      border-radius: 10px;
+      width: 34px;
+      height: 34px;
+      flex-shrink: 0;
+    }
+
+    .assistant-body {
+      margin-top: 12px;
+      color: var(--soft);
+      font-size: .92rem;
+    }
+
+    .assistant-actions {
+      margin-top: 14px;
+      display: grid;
+      gap: 8px;
+    }
+
+    .assistant-action {
+      width: 100%;
+      text-align: left;
+      padding: 10px 12px;
+      border-radius: 12px;
+      color: #fff;
+      background: rgba(255,255,255,.06);
+      border: 1px solid rgba(255,255,255,.12);
+      font-weight: 600;
+    }
+
+    .assistant-alert {
+      margin-top: 10px;
+      border-radius: 12px;
+      padding: 10px 12px;
+      background: rgba(232,0,29,.12);
+      border: 1px solid rgba(232,0,29,.28);
+      color: #ffd7df;
+      font-size: .86rem;
+      display: none;
+    }
+
+    .assistant-alert.show {
+      display: block;
+    }
  
     .faq-wrap { max-width: 900px; margin: 0 auto; }
  
@@ -1137,6 +1292,16 @@
       .community-photo img {
         height: 260px;
       }
+
+      .assistant-panel {
+        right: 12px;
+        bottom: 84px;
+      }
+
+      .assistant-fab {
+        right: 12px;
+        bottom: 12px;
+      }
     }
  
     @media (max-width: 520px) {
@@ -1191,12 +1356,12 @@
   </nav>
  
   <div class="mobile-nav" id="mobileNav">
-    <a href="#" onclick="showPage('home'); closeMobile(); return false;">Home</a>
-    <a href="#" onclick="showPage('variants'); closeMobile(); return false;">Game Modes</a>
-    <a href="#" onclick="showPage('health'); closeMobile(); return false;">Health Hub</a>
-    <a href="#" onclick="showPage('pro'); closeMobile(); return false;">Health Pro</a>
-    <a href="#" onclick="showPage('support'); closeMobile(); return false;">Find Support</a>
-    <a href="#" onclick="showPage('faq'); closeMobile(); return false;">FAQ</a>
+    <a href="#" id="mnl-home" onclick="showPage('home'); closeMobile(); return false;">Home</a>
+    <a href="#" id="mnl-variants" onclick="showPage('variants'); closeMobile(); return false;">Game Modes</a>
+    <a href="#" id="mnl-health" onclick="showPage('health'); closeMobile(); return false;">Health Hub</a>
+    <a href="#" id="mnl-pro" onclick="showPage('pro'); closeMobile(); return false;">Health Pro</a>
+    <a href="#" id="mnl-support" onclick="showPage('support'); closeMobile(); return false;">Find Support</a>
+    <a href="#" id="mnl-faq" onclick="showPage('faq'); closeMobile(); return false;">FAQ</a>
   </div>
  
   <div class="page active" id="page-home">
@@ -1286,7 +1451,7 @@
         <p class="section-sub">Real protection. Real people. Real sexual health awareness for Zambia.</p>
         <div class="brand-gallery">
           <div class="community-video card fade-up">
-            <div class="video-fallback" id="videoFallback" role="button" tabindex="0" onclick="loadCommunityVideo()" onkeydown="if(event.key==='Enter'){loadCommunityVideo();}">
+            <div class="video-fallback" id="videoFallback" role="button" tabindex="0" aria-label="Load community video" onclick="loadCommunityVideo()" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();loadCommunityVideo();}">
               <img src="WhatsApp_Image_2026-03-01_at_11_40_09_AM.jpeg" alt="Community launch moment in Zambia" loading="lazy" />
               <div class="video-play">Tap to play community video<br/><small>Optimized for low-data browsing</small></div>
             </div>
@@ -1361,7 +1526,7 @@
           <div>+260 97 7725114</div>
           <div>+260 97 9351203</div>
           <div>+260 97 5620011</div>
-          <a class="footer-link" href="mailto:info@xplodemediazm">info@xplodemediazm</a>
+          <div class="footer-link">info@xplodemediazm</div>
           <div>dkteastafrica.org</div>
         </div>
       </div>
@@ -1521,32 +1686,19 @@
  
           <div class="edu-card card fade-up">
             <div class="edu-icon">🛡️</div>
-            <div class="edu-title">Condom Safety Essentials</div>
+            <div class="edu-title">How to Use a Condom: 10 Quick Steps</div>
             <div class="edu-body">
               <div class="step-list">
-                <div class="step-row">
-                  <div class="step-n">1</div>
-                  <div class="step-txt">
-                    <strong>Check expiry date</strong>
-                    <span>Never use an expired condom. Always inspect the wrapper first.</span>
-                  </div>
-                </div>
- 
-                <div class="step-row">
-                  <div class="step-n">2</div>
-                  <div class="step-txt">
-                    <strong>Open carefully</strong>
-                    <span>Do not use teeth, blades or scissors.</span>
-                  </div>
-                </div>
- 
-                <div class="step-row">
-                  <div class="step-n">3</div>
-                  <div class="step-txt">
-                    <strong>Use correctly</strong>
-                    <span>Pinch the tip, roll fully to the base, and remove carefully after use.</span>
-                  </div>
-                </div>
+                <div class="step-row"><div class="step-n">1</div><div class="step-txt"><strong>Check the expiry date.</strong><span>If it is expired, throw it away and use a new one.</span></div></div>
+                <div class="step-row"><div class="step-n">2</div><div class="step-txt"><strong>Check the wrapper for damage.</strong><span>Do not use if torn, punctured, or dried out.</span></div></div>
+                <div class="step-row"><div class="step-n">3</div><div class="step-txt"><strong>Open carefully.</strong><span>Do not use teeth, knives, or scissors.</span></div></div>
+                <div class="step-row"><div class="step-n">4</div><div class="step-txt"><strong>Make sure it is the right way round.</strong><span>It should roll down easily, not inside out.</span></div></div>
+                <div class="step-row"><div class="step-n">5</div><div class="step-txt"><strong>Pinch the tip.</strong><span>Leave space at the tip to collect semen.</span></div></div>
+                <div class="step-row"><div class="step-n">6</div><div class="step-txt"><strong>Roll it all the way down.</strong><span>Do this before any genital contact.</span></div></div>
+                <div class="step-row"><div class="step-n">7</div><div class="step-txt"><strong>Add lube if needed.</strong><span>Use water-based or silicone-based lubricant.</span></div></div>
+                <div class="step-row"><div class="step-n">8</div><div class="step-txt"><strong>After sex, hold the base.</strong><span>Withdraw while holding the base to avoid slipping.</span></div></div>
+                <div class="step-row"><div class="step-n">9</div><div class="step-txt"><strong>Remove and dispose safely.</strong><span>Wrap it in tissue and throw it in the bin.</span></div></div>
+                <div class="step-row"><div class="step-n">10</div><div class="step-txt"><strong>Use a new condom every time.</strong><span>Never reuse condoms.</span></div></div>
               </div>
             </div>
           </div>
@@ -1577,6 +1729,32 @@
  
         <div class="guide-wrap fade-up">
           <img src="condom-guide.png" alt="Educational guide showing correct use of condoms for Zambian audiences" loading="lazy" />
+        </div>
+
+        <div class="edu-grid" style="margin-top: 24px;">
+          <div class="edu-card card fade-up">
+            <div class="edu-icon">⚠️</div>
+            <div class="edu-title">Do not do this</div>
+            <div class="edu-body">
+              <p>Do not use two condoms at once.</p>
+              <p>Do not reuse a condom.</p>
+              <p>Do not use oil-based lubricants with latex condoms.</p>
+              <p>Do not put a condom on halfway through sex.</p>
+              <p>Do not store condoms in hot places for long periods.</p>
+              <p>Do not use expired condoms.</p>
+            </div>
+          </div>
+          <div class="edu-card card fade-up">
+            <div class="edu-icon">🆘</div>
+            <div class="edu-title">If the condom breaks</div>
+            <div class="edu-body">
+              <p>Stay calm and stop right away.</p>
+              <p>Pregnancy risk: ask about emergency contraception as soon as possible (best within 72 hours, and up to 5 days depending on method).</p>
+              <p>HIV exposure risk: ask about PEP urgently (must start within 72 hours).</p>
+              <p>Arrange STI testing and follow-up with a clinic.</p>
+              <p>Go quickly to a clinic, pharmacy, or support service for personal advice.</p>
+            </div>
+          </div>
         </div>
       </div>
     </section>
@@ -1727,7 +1905,7 @@
             <div class="contact-list">
               <div class="contact-pill">
                 <strong>Email</strong>
-                <a href="mailto:info@xplodemediazm">info@xplodemediazm</a>
+                <span>info@xplodemediazm</span>
               </div>
               <div class="contact-pill">
                 <strong>Phone 1</strong>
@@ -1805,6 +1983,11 @@
  
     <section class="section" style="padding-top: 24px;">
       <div class="container">
+        <div class="faq-search-wrap">
+          <label for="faqSearch" class="section-sub" style="display:block; margin-bottom: 8px;">Search FAQ</label>
+          <input id="faqSearch" type="search" placeholder="Type a keyword (example: break, lube, clinic)" aria-label="Search frequently asked questions" />
+          <div class="faq-empty" id="faqNoResults" role="status" aria-live="polite">No matching FAQ entries found. Try another keyword.</div>
+        </div>
         <div class="faq-wrap">
           <div class="faq-item card fade-up">
             <div class="faq-q" onclick="toggleFaq(this)">
@@ -1909,6 +2092,29 @@
       </div>
     </section>
   </div>
+  <button class="assistant-fab" id="assistantFab" type="button" aria-label="Open Health Assistant">💬</button>
+  <aside class="assistant-panel" id="assistantPanel" aria-label="Health Assistant panel">
+    <div class="assistant-head">
+      <div>
+        <div class="assistant-title">Health Assistant</div>
+        <div class="assistant-sub">Private guidance and quick help</div>
+      </div>
+      <button class="assistant-close" id="assistantClose" type="button" aria-label="Close Health Assistant">✕</button>
+    </div>
+    <div class="assistant-body">
+      Hi. I can help with safer sex information, condom use, STI basics, and support options.
+      <div class="assistant-actions">
+        <button class="assistant-action" type="button" data-go="health">Learn about sexual health</button>
+        <button class="assistant-action" type="button" data-go="variants">View condom options</button>
+        <button class="assistant-action" type="button" data-go="support">Find support</button>
+        <button class="assistant-action" type="button" data-go="faq">FAQ</button>
+        <button class="assistant-action" type="button" id="assistantUrgent">Urgent help</button>
+      </div>
+      <div class="assistant-alert" id="assistantAlert" role="status" aria-live="polite">
+        If this is urgent, severe, or involves possible exposure, assault, or symptoms needing immediate care, please go to the nearest clinic or hospital immediately. This assistant provides educational guidance only.
+      </div>
+    </div>
+  </aside>
   <script src="https://unpkg.com/@formspree/ajax@1" defer></script>
 
  <script>
@@ -1917,21 +2123,47 @@
   const mainNav = document.getElementById('mainNav');
   const burger = document.getElementById('burger');
   const installBtn = document.getElementById('installBtn');
+  const animatedElements = document.querySelectorAll('.fade-up');
+  const faqSearchInput = document.getElementById('faqSearch');
+  const faqItems = Array.from(document.querySelectorAll('.faq-item'));
+  const faqNoResults = document.getElementById('faqNoResults');
+
+  let observer;
+  let videoLoaded = false;
+  let isSubmitting = false;
+
+  function updateActiveNav(name) {
+    pages.forEach((page) => {
+      const desktopLink = document.getElementById(`nl-${page}`);
+      const mobileLink = document.getElementById(`mnl-${page}`);
+      if (desktopLink) desktopLink.classList.toggle('active', page === name);
+      if (mobileLink) mobileLink.classList.toggle('active', page === name);
+    });
+  }
+
+  function observeAll() {
+    if (observer) {
+      animatedElements.forEach((el) => observer.unobserve(el));
+    }
+    observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) entry.target.classList.add('vis');
+      });
+    }, { threshold: 0.12 });
+    animatedElements.forEach((el) => observer.observe(el));
+  }
 
   function showPage(name) {
+    const pageName = pages.includes(name) ? name : 'home';
     pages.forEach((page) => {
-      document.getElementById(`page-${page}`).classList.toggle('active', page === name);
-      const link = document.getElementById(`nl-${page}`);
-      if (link) {
-        link.classList.toggle('active', page === name);
-      }
+      const pageElement = document.getElementById(`page-${page}`);
+      if (pageElement) pageElement.classList.toggle('active', page === pageName);
     });
-
-    if (window.location.hash !== `#${name}`) {
-      window.history.replaceState(null, '', `#${name}`);
-    }
+    updateActiveNav(pageName);
+    if (window.location.hash !== `#${pageName}`) window.history.replaceState(null, '', `#${pageName}`);
     window.scrollTo({ top: 0, behavior: 'smooth' });
     closeMobile();
+    observeAll();
   }
 
   function toggleMobile() {
@@ -1943,6 +2175,7 @@
   }
 
   function toggleFaq(el) {
+    if (!el || !el.parentElement) return;
     el.parentElement.classList.toggle('open');
   }
 
@@ -1974,13 +2207,27 @@
   }
 
   function loadCommunityVideo() {
+    if (videoLoaded) return;
     const fallback = document.getElementById('videoFallback');
-    if (!fallback) return;
-    fallback.outerHTML = `
-      <video controls playsinline preload="none" poster="WhatsApp_Image_2026-03-01_at_11_40_09_AM.jpeg">
-        <source src="https://res.cloudinary.com/dqfx4qybg/video/upload/f_auto,q_auto:eco,w_960/v1772691895/kiss-community_s8d4ma.mp4" type="video/mp4" />
-        Your browser does not support the video tag.
-      </video>`;
+    const parent = fallback ? fallback.parentElement : null;
+    if (!fallback || !parent) return;
+    const video = document.createElement('video');
+    video.controls = true;
+    video.playsInline = true;
+    video.preload = 'none';
+    video.poster = 'WhatsApp_Image_2026-03-01_at_11_40_09_AM.jpeg';
+    video.muted = true;
+    video.loop = true;
+    video.setAttribute('aria-label', 'Kiss community video');
+    const source = document.createElement('source');
+    source.src = 'https://res.cloudinary.com/dqfx4qybg/video/upload/f_auto,q_auto:eco,w_960/v1772691895/kiss-community_s8d4ma.mp4';
+    source.type = 'video/mp4';
+    video.appendChild(source);
+    video.appendChild(document.createTextNode('Your browser does not support the video tag.'));
+    fallback.remove();
+    parent.appendChild(video);
+    videoLoaded = true;
+    video.play().catch(() => {});
   }
 
   function triggerInstall() {
@@ -2011,7 +2258,12 @@
     const subject = form.querySelector('[name="subject"]');
     const message = form.querySelector('[name="message"]');
 
-    if (!name.value.trim() || !email.value.trim() || !subject.value.trim() || !message.value.trim()) {
+    name.value = name.value.trim();
+    email.value = email.value.trim();
+    subject.value = subject.value.trim();
+    message.value = message.value.trim();
+
+    if (!name.value || !email.value || !subject.value || !message.value) {
       setContactStatus('Please complete all required fields before sending.', 'bad');
       return false;
     }
@@ -2028,11 +2280,13 @@
   if (contactForm) {
     contactForm.addEventListener('submit', async (event) => {
       event.preventDefault();
+      if (isSubmitting) return;
 
       if (!validateContactForm(contactForm)) {
         return;
       }
 
+      isSubmitting = true;
       const formData = new FormData(contactForm);
 
       if (contactSubmitButton) {
@@ -2063,6 +2317,7 @@
       } catch (error) {
         setContactStatus(error.message || 'Submission failed. Please check your connection and try again.', 'bad');
       } finally {
+        isSubmitting = false;
         if (contactSubmitButton) {
           contactSubmitButton.disabled = false;
           contactSubmitButton.textContent = contactSubmitButton.dataset.originalLabel || 'Send Enquiry';
@@ -2070,16 +2325,7 @@
       }
     });
   }
-
-  const observer = new IntersectionObserver((entries) => {
-    entries.forEach((entry) => {
-      if (entry.isIntersecting) {
-        entry.target.classList.add('vis');
-      }
-    });
-  }, { threshold: 0.12 });
-
-  document.querySelectorAll('.fade-up').forEach((el) => observer.observe(el));
+  observeAll();
 
   let deferredPrompt;
 
@@ -2142,10 +2388,58 @@
     }
   });
 
-  const hashPage = window.location.hash.replace('#', '');
-  if (pages.includes(hashPage)) {
-    showPage(hashPage);
+  if (faqSearchInput) {
+    faqSearchInput.addEventListener('input', (event) => {
+      const raw = String(event.target.value || '').trim().toLowerCase();
+      let visibleCount = 0;
+      faqItems.forEach((item) => {
+        const q = item.querySelector('.faq-q strong')?.textContent?.toLowerCase() || '';
+        const a = item.querySelector('.faq-a')?.textContent?.toLowerCase() || '';
+        const matches = !raw || q.includes(raw) || a.includes(raw);
+        item.style.display = matches ? '' : 'none';
+        if (matches) visibleCount += 1;
+      });
+      if (faqNoResults) faqNoResults.classList.toggle('show', visibleCount === 0);
+    });
   }
+
+  const assistantFab = document.getElementById('assistantFab');
+  const assistantPanel = document.getElementById('assistantPanel');
+  const assistantClose = document.getElementById('assistantClose');
+  const assistantUrgent = document.getElementById('assistantUrgent');
+  const assistantAlert = document.getElementById('assistantAlert');
+  function openAssistant() {
+    assistantPanel.classList.add('open');
+  }
+  function closeAssistant() {
+    assistantPanel.classList.remove('open');
+  }
+  if (assistantFab) assistantFab.addEventListener('click', openAssistant);
+  if (assistantClose) assistantClose.addEventListener('click', closeAssistant);
+  if (assistantUrgent) {
+    assistantUrgent.addEventListener('click', () => {
+      assistantAlert.classList.add('show');
+    });
+  }
+  document.querySelectorAll('.assistant-action[data-go]').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      const page = btn.getAttribute('data-go');
+      if (page) showPage(page);
+      closeAssistant();
+    });
+  });
+  document.addEventListener('keydown', (event) => {
+    if (event.key === 'Escape') closeAssistant();
+  });
+  document.addEventListener('click', (event) => {
+    const target = event.target;
+    if (assistantPanel.classList.contains('open') && !assistantPanel.contains(target) && target !== assistantFab) {
+      closeAssistant();
+    }
+  });
+
+  const hashPage = window.location.hash.replace('#', '');
+  showPage(pages.includes(hashPage) ? hashPage : 'home');
 
   if ('serviceWorker' in navigator) {
     window.addEventListener('load', () => {
@@ -2155,4 +2449,3 @@
 </script>
 </body>
 </html>
- 
